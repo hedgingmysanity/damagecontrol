@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Score Calculator</title>
+    <title>Live Score Calculator</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js"></script>
     <style>
         body {
@@ -14,37 +14,36 @@
     </style>
 </head>
 <body onload="brython()">
-    <h1>Final Score Calculator</h1>
+    <h1>Final Score Calculator (Live Update!)</h1>
 
     <label>Current Total Score:</label><br>
-    <input id="current_score" type="number" placeholder="Enter your current score"><br><br>
+    <input id="current_score" type="number" placeholder="Enter your current score" oninput="live_update()"><br><br>
 
     <div class="slider-container">
         <label>Input 1: <span id="val1">0</span></label><br>
-        <input id="slider1" type="range" min="0" max="100" value="0" oninput="update_value('slider1', 'val1')">
+        <input id="slider1" type="range" min="0" max="100" value="0" oninput="update_slider('slider1', 'val1')">
     </div>
 
     <div class="slider-container">
         <label>Input 2: <span id="val2">0</span></label><br>
-        <input id="slider2" type="range" min="0" max="100" value="0" oninput="update_value('slider2', 'val2')">
+        <input id="slider2" type="range" min="0" max="100" value="0" oninput="update_slider('slider2', 'val2')">
     </div>
 
     <div class="slider-container">
         <label>Input 3: <span id="val3">0</span></label><br>
-        <input id="slider3" type="range" min="0" max="100" value="0" oninput="update_value('slider3', 'val3')">
+        <input id="slider3" type="range" min="0" max="100" value="0" oninput="update_slider('slider3', 'val3')">
     </div>
-
-    <button onclick="calculate()">Calculate Final Value</button>
 
     <h2 id="result"></h2>
 
     <script type="text/python">
         from browser import document
 
-        def update_value(slider_id, value_id):
+        def update_slider(slider_id, value_id):
             document[value_id].text = document[slider_id].value
+            live_update()
 
-        def calculate(event=None):
+        def live_update(event=None):
             try:
                 current_score = float(document["current_score"].value)
             except ValueError:
@@ -55,13 +54,24 @@
             s3 = float(document["slider3"].value)
 
             final_value = (current_score + s1 + s2 + s3) / 8
-
             document["result"].text = f"Final Value: {final_value:.2f}"
     </script>
 
     <script>
-        function update_value(sliderId, valueId) {
+        function update_slider(sliderId, valueId) {
             document.getElementById(valueId).textContent = document.getElementById(sliderId).value;
+            live_update();
+        }
+
+        function live_update() {
+            const currentInput = document.getElementById('current_score').value;
+            const currentScore = parseFloat(currentInput) || 0.0;
+            const s1 = parseFloat(document.getElementById('slider1').value);
+            const s2 = parseFloat(document.getElementById('slider2').value);
+            const s3 = parseFloat(document.getElementById('slider3').value);
+
+            const finalValue = (currentScore + s1 + s2 + s3) / 8;
+            document.getElementById('result').textContent = `Final Value: ${finalValue.toFixed(2)}`;
         }
     </script>
 </body>
