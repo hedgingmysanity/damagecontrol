@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Score Calculator</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        .slider-container {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body onload="brython()">
+    <h1>Final Score Calculator</h1>
+
+    <label>Current Total Score:</label><br>
+    <input id="current_score" type="number" placeholder="Enter your current score"><br><br>
+
+    <div class="slider-container">
+        <label>Input 1: <span id="val1">0</span></label><br>
+        <input id="slider1" type="range" min="0" max="100" value="0" oninput="update_value('slider1', 'val1')">
+    </div>
+
+    <div class="slider-container">
+        <label>Input 2: <span id="val2">0</span></label><br>
+        <input id="slider2" type="range" min="0" max="100" value="0" oninput="update_value('slider2', 'val2')">
+    </div>
+
+    <div class="slider-container">
+        <label>Input 3: <span id="val3">0</span></label><br>
+        <input id="slider3" type="range" min="0" max="100" value="0" oninput="update_value('slider3', 'val3')">
+    </div>
+
+    <button onclick="calculate()">Calculate Final Value</button>
+
+    <h2 id="result"></h2>
+
+    <script type="text/python">
+        from browser import document
+
+        def update_value(slider_id, value_id):
+            document[value_id].text = document[slider_id].value
+
+        def calculate(event=None):
+            try:
+                current_score = float(document["current_score"].value)
+            except ValueError:
+                current_score = 0.0
+
+            s1 = float(document["slider1"].value)
+            s2 = float(document["slider2"].value)
+            s3 = float(document["slider3"].value)
+
+            final_value = (current_score + s1 + s2 + s3) / 8
+
+            document["result"].text = f"Final Value: {final_value:.2f}"
+    </script>
+
+    <script>
+        function update_value(sliderId, valueId) {
+            document.getElementById(valueId).textContent = document.getElementById(sliderId).value;
+        }
+    </script>
+</body>
+</html>
